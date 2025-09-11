@@ -64,9 +64,9 @@ func (s *paymentService) CreateCheckoutSession(items []CheckoutItem, customerEma
 		// Convert price to cents (Stripe uses cents)
 		priceInCents := int64(item.Price * 100)
 
-		lineItem := &stripe.CheckoutSessionLineItemParams{
-			PriceData: &stripe.CheckoutSessionLineItemPriceDataParams{
-				Currency: stripe.String("usd"),
+    lineItem := &stripe.CheckoutSessionLineItemParams{
+        PriceData: &stripe.CheckoutSessionLineItemPriceDataParams{
+            Currency: stripe.String("sek"),
 				ProductData: &stripe.CheckoutSessionLineItemPriceDataProductDataParams{
 					Name:        stripe.String(item.Name),
 					Description: stripe.String(item.Description),
@@ -90,7 +90,7 @@ func (s *paymentService) CreateCheckoutSession(items []CheckoutItem, customerEma
 		lineItems = append(lineItems, lineItem)
 	}
 
-	params := &stripe.CheckoutSessionParams{
+    params := &stripe.CheckoutSessionParams{
 		PaymentMethodTypes: stripe.StringSlice([]string{"card"}),
 		LineItems:          lineItems,
 		Mode:               stripe.String(string(stripe.CheckoutSessionModePayment)),
@@ -99,9 +99,9 @@ func (s *paymentService) CreateCheckoutSession(items []CheckoutItem, customerEma
 		CustomerEmail:      stripe.String(customerEmail),
 		
 		// Enable shipping address collection
-		ShippingAddressCollection: &stripe.CheckoutSessionShippingAddressCollectionParams{
-			AllowedCountries: stripe.StringSlice([]string{"US", "CA", "GB", "DE", "FR", "ES", "IT", "NL", "BE", "AT", "CH", "SE", "NO", "DK", "FI"}),
-		},
+        ShippingAddressCollection: &stripe.CheckoutSessionShippingAddressCollectionParams{
+            AllowedCountries: stripe.StringSlice([]string{"SE", "NO", "DK", "FI", "GB", "DE", "FR", "ES", "IT", "NL", "BE", "AT", "CH", "US", "CA"}),
+        },
 		
 		// Add metadata for order tracking
 		Metadata: map[string]string{
@@ -124,9 +124,9 @@ func (s *paymentService) CreateCheckoutSessionWithFullInfo(items []CheckoutItem,
 		// Convert price to cents (Stripe uses cents)
 		priceInCents := int64(item.Price * 100)
 
-		lineItem := &stripe.CheckoutSessionLineItemParams{
-			PriceData: &stripe.CheckoutSessionLineItemPriceDataParams{
-				Currency: stripe.String("usd"),
+    lineItem := &stripe.CheckoutSessionLineItemParams{
+        PriceData: &stripe.CheckoutSessionLineItemPriceDataParams{
+            Currency: stripe.String("sek"),
 				ProductData: &stripe.CheckoutSessionLineItemPriceDataProductDataParams{
 					Name:        stripe.String(item.Name),
 					Description: stripe.String(item.Description),
@@ -159,29 +159,29 @@ func (s *paymentService) CreateCheckoutSessionWithFullInfo(items []CheckoutItem,
 		CustomerEmail:      stripe.String(customerInfo.Email),
 		
 		// Enable shipping address collection
-		ShippingAddressCollection: &stripe.CheckoutSessionShippingAddressCollectionParams{
-			AllowedCountries: stripe.StringSlice([]string{"US", "CA", "GB", "DE", "FR", "ES", "IT", "NL", "BE", "AT", "CH", "SE", "NO", "DK", "FI"}),
-		},
+        ShippingAddressCollection: &stripe.CheckoutSessionShippingAddressCollectionParams{
+            AllowedCountries: stripe.StringSlice([]string{"SE", "NO", "DK", "FI", "GB", "DE", "FR", "ES", "IT", "NL", "BE", "AT", "CH", "US", "CA"}),
+        },
 		
 		// Pre-fill shipping address
 		ShippingOptions: []*stripe.CheckoutSessionShippingOptionParams{
 			{
 				ShippingRateData: &stripe.CheckoutSessionShippingOptionShippingRateDataParams{
 					Type: stripe.String("fixed_amount"),
-					FixedAmount: &stripe.CheckoutSessionShippingOptionShippingRateDataFixedAmountParams{
-						Amount:   stripe.Int64(0), // Free shipping
-						Currency: stripe.String("usd"),
-					},
+                FixedAmount: &stripe.CheckoutSessionShippingOptionShippingRateDataFixedAmountParams{
+                    Amount:   stripe.Int64(0), // Free shipping
+                    Currency: stripe.String("sek"),
+                },
 					DisplayName: stripe.String("Free Shipping"),
 				},
 			},
 			{
 				ShippingRateData: &stripe.CheckoutSessionShippingOptionShippingRateDataParams{
 					Type: stripe.String("fixed_amount"),
-					FixedAmount: &stripe.CheckoutSessionShippingOptionShippingRateDataFixedAmountParams{
-						Amount:   stripe.Int64(999), // $9.99
-						Currency: stripe.String("usd"),
-					},
+                FixedAmount: &stripe.CheckoutSessionShippingOptionShippingRateDataFixedAmountParams{
+                    Amount:   stripe.Int64(9900), // 99.00 SEK
+                    Currency: stripe.String("sek"),
+                },
 					DisplayName: stripe.String("Express Shipping"),
 					DeliveryEstimate: &stripe.CheckoutSessionShippingOptionShippingRateDataDeliveryEstimateParams{
 						Minimum: &stripe.CheckoutSessionShippingOptionShippingRateDataDeliveryEstimateMinimumParams{
