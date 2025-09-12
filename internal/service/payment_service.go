@@ -80,8 +80,8 @@ func (s *paymentService) CreateCheckoutSession(items []CheckoutItem, customerEma
 		if len(item.Images) > 0 {
 			var images []*string
 			for _, img := range item.Images {
-				// Construct full image URL
-				imageURL := fmt.Sprintf("http://localhost:8080/uploads/%s", img)
+				// Use Supabase image URL for production
+				imageURL := fmt.Sprintf("https://mqkoydypybxgcwxioqzc.supabase.co/storage/v1/object/public/products/%s", img)
 				images = append(images, stripe.String(imageURL))
 			}
 			lineItem.PriceData.ProductData.Images = images
